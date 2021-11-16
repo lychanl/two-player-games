@@ -28,7 +28,13 @@ class DotsAndBoxes(Game):
 
 
 class DotsAndBoxesMove(Move):
-    """Class that represents a move in the dots and boxes game"""
+    """
+    Class that represents a move in the dots and boxes game
+
+    Variables:
+        connection: str, 'h' if a horizontal line or 'v' if a vertical line
+        loc: line coordinates as a tuple: (column, row) for horizontal or (row, column) for vertical
+    """
     def __init__(self, connection: str, loc: Tuple[int, int]):
         self.connection = connection
         self.loc = loc
