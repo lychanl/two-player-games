@@ -8,5 +8,6 @@ class Player:
             char: a single-character string to represent the player in textual representations of game state
         """
         if len(char) != 1:
-            raise ValueError()
+            raise ValueError('Character that represents player should be of length 1')
+
         self.char = char

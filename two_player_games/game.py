@@ -52,6 +52,13 @@ class Game:
         """
         return self.state.get_winner()
 
+    def get_players(self) -> Iterable[Player]:
+        """
+        Returns:
+            List of players
+        """
+        return self.state.get_players()
+
     def __str__(self) -> str:
         """
         Returns:

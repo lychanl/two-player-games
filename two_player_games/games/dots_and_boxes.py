@@ -63,8 +63,7 @@ class DotsAndBoxesState(State):
         else:
             raise ValueError("Cannot initialize state, parameters missing")
 
-        self.current_player = current_player
-        self.other_player = other_player
+        super().__init__(current_player, other_player)
 
     def get_moves(self) -> Iterable[DotsAndBoxesMove]:
         return [
@@ -74,9 +73,6 @@ class DotsAndBoxesState(State):
             DotsAndBoxesMove("v", loc)
             for loc in self._get_free_lines(self.verticals)
         ]
-
-    def get_current_player(self) -> Player:
-        return self.current_player
 
     def make_move(self, move: DotsAndBoxesMove) -> 'DotsAndBoxesState':
         collection = self.horizontals if move.connection == "h" else self.verticals
@@ -88,11 +84,11 @@ class DotsAndBoxesState(State):
         boxes, changed = self._check_boxes_after_move(horizontals, verticals, move)
 
         if changed:
-            next_player = self.current_player
-            other_player = self.other_player
+            next_player = self._current_player
+            other_player = self._other_player
         else:
-            next_player = self.other_player
-            other_player = self.current_player
+            next_player = self._other_player
+            other_player = self._current_player
 
         return DotsAndBoxesState(
             next_player, other_player,
@@ -106,10 +102,10 @@ class DotsAndBoxesState(State):
         if not self.is_finished():
             return None
         scores = self.get_scores()
-        if scores[self.current_player] > scores[self.other_player]:
-            return self.current_player
-        elif scores[self.current_player] < scores[self.other_player]:
-            return self.other_player
+        if scores[self._current_player] > scores[self._other_player]:
+            return self._current_player
+        elif scores[self._current_player] < scores[self._other_player]:
+            return self._other_player
         else:
             return None
 
@@ -122,12 +118,12 @@ class DotsAndBoxesState(State):
 
         text.append(self._lines_row_to_str(len(self.boxes)))
 
-        return f'Current player: {self.current_player.char}\n' + '\n'.join(text)
+        return f'Current player: {self._current_player.char}\n' + '\n'.join(text)
 
     def get_scores(self) -> Dict[Player, int]:
         scores = {
-            self.current_player: 0,
-            self.other_player: 0
+            self._current_player: 0,
+            self._other_player: 0
         }
 
         for row in self.boxes:
@@ -161,7 +157,7 @@ class DotsAndBoxesState(State):
             return self.boxes[row][col]
 
         if horizontals[col][row] and horizontals[col][row + 1] and verticals[row][col] and verticals[row][col + 1]:
-            return self.current_player
+            return self._current_player
 
         return None
 
