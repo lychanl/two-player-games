@@ -70,7 +70,7 @@ class ConnectFourState(State):
         return ConnectFourState(current_player=self._other_player, other_player=self._current_player, fields=new_fields)
 
     def is_finished(self) -> bool:
-        return self.get_winner() is not None
+        return all(map(all, self.fields)) or self.get_winner() is not None
 
     def get_winner(self) -> Optional[Player]:
         for column_id in range(len(self.fields)):  # verticals

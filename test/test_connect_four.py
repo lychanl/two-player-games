@@ -133,3 +133,20 @@ class TestConnectFour(unittest.TestCase):
         ], current_player=p1)
 
         self.assertIs(state.get_winner(), p2)
+
+    def test_tie(self):
+        p1 = Player('1')
+        p2 = Player('2')
+
+        state = ConnectFourState(fields=[
+            [p1, p1, p1, p2, p1, p1],
+            [p1, p2, p2, p1, p2, p2],
+            [p2, p1, p2, p2, p1, p1],
+            [p2, p2, p1, p1, p1, p2],
+            [p1, p2, p1, p2, p2, p1],
+            [p2, p2, p2, p1, p1, p1],
+            [p2, p1, p1, p1, p2, p2]
+        ], current_player=p1)
+
+        self.assertIs(state.get_winner(), None)
+        self.assertTrue(state.is_finished())
