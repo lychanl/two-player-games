@@ -27,6 +27,9 @@ class Pick(Game):
 
         super().__init__(state)
 
+    def make_move(self, move: Move):
+        self.state = self.state.make_move(move)
+
 
 class PickMove(Move):
     """
@@ -74,13 +77,11 @@ class PickState(State):
         if move.number > self.max_number or move.number in self.selected_numbers:
             raise ValueError("Invalid move")
         else:
-            self.current_player_numbers.append(move.number)
-
             next_player = self._other_player
             next_player_numbers = self.other_player_numbers
 
             other_player = self._current_player
-            other_player_numbers = self.current_player_numbers
+            other_player_numbers = self.current_player_numbers + [move.number]
 
         return PickState(
             next_player, other_player, self.n, next_player_numbers, other_player_numbers
