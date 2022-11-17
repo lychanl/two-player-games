@@ -27,9 +27,6 @@ class Pick(Game):
 
         super().__init__(state)
 
-    def make_move(self, move: Move):
-        self.state = self.state.make_move(move)
-
 
 class PickMove(Move):
     """
