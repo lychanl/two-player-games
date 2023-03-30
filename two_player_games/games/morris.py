@@ -6,6 +6,7 @@ from two_player_games.state import State
 
 
 class Morris(Game):
+    """Class that represents the morris games. Current implementation does not allow flying."""
     def __init__(
             self, n_pawns: int, size: int, connections: List[Tuple[int, int]],
             possible_morrises: List[Tuple[int, int, int]], moves_limit: int,
@@ -22,6 +23,7 @@ class Morris(Game):
 
 
 class SixMensMorris(Morris):
+    """Class that represents the Six Men's Morris Game."""
     FIRST_PLAYER_DEFAULT_CHAR = '1'
     SECOND_PLAYER_DEFAULT_CHAR = '2'
 
@@ -62,6 +64,18 @@ class SixMensMorris(Morris):
 
 
 class MorrisMove(Move):
+    """Class that represents a move in the morris game.
+
+    It has 3 numerical fields:
+     - take_pawn - represents field from which a move is made. Optional.
+     - place_pawn - represents field to which a pawn is placed. Required.
+     - remove_pawn - represents field from which an opponent's pawn is removed. Optional.
+
+    There are 4 possible move types:
+     - placing pawn to place_pawn
+     - move pawn from take_pawn to place_pawn
+     - additionally, an enemy pawn may be removed
+    """
     def __init__(
             self, take_pawn: Optional[int] = None,
             place_pawn: Optional[int] = None,
@@ -82,6 +96,7 @@ class MorrisMove(Move):
 
 
 class MorrisState(State):
+    """Represents a state in the morris game. Current implementation does not allow flying."""
     def __init__(
             self, n_pawns: int, size: int, connections: List[Tuple[int, int]],
             possible_morrises: List[Tuple[int, int, int]], moves_limit: int,
