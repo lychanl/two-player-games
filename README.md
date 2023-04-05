@@ -14,3 +14,25 @@ Common functionalities of `Game` and `State`:
  - getting the list of avaliable moves
  - getting current player
  - checking if a game has finished
+
+## Usage example
+
+```python
+from two_player_games.games.morris import SixMensMorris  # or any other game
+import random
+
+
+game = SixMensMorris()
+
+while not game.is_finished():
+    moves = game.get_moves()
+    move = random.choice(moves)
+    game.make_move(move)
+
+winner = game.get_winner()
+if winner is None:
+    print('Draw!')
+else:
+    print('Winner: Player ' + winner.char)
+
+```

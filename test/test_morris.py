@@ -120,6 +120,10 @@ class TestMorris(unittest.TestCase):
             ]
         )
 
+    def test_winner_and_finished_empty(self):
+        game = SixMensMorris()
+        self.assertFalse(game.is_finished())
+
     def test_winner_and_finished(self):
         game = SixMensMorris()
         p1, p2 = game.get_players()

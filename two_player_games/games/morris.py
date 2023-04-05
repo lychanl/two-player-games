@@ -140,6 +140,11 @@ class MorrisState(State):
             return True, self._current_player
 
         available_move = False
+        if self.placed_pawns[self._current_player] < self.n_pawns:
+            for field in self.grid:
+                if field is None:
+                    available_move = True
+                    break
         for connection in self.connections:
             if (
                 self.grid[connection[0]] is self._current_player and self.grid[connection[1]] is None
@@ -198,6 +203,8 @@ class MorrisState(State):
         return moves_list
 
     def make_move(self, move: MorrisMove) -> 'MorrisState':
+        if self.finished:
+            raise ValueError("Cannot make move on finished game")
         new_grid = list(self.grid)
         n_moves = self.n_moves
         new_placed_pawns = dict(self.placed_pawns)
@@ -235,6 +242,16 @@ class MorrisState(State):
         return self.winner
 
     def __str__(self) -> str:
+        if self.is_finished():
+            current_player_text = ""
+            if self.get_winner() is None:
+                finished_text = "Draw!"
+            else:
+                finished_text = "Winner: Player " + self.get_winner().char
+        else:
+            current_player_text = "Current player: " + self._current_player.char
+            finished_text = ""
+
         if all(v == self.n_pawns for v in self.placed_pawns.values()):
             pawns_to_place = ""
         else:
@@ -242,7 +259,8 @@ class MorrisState(State):
                 f"Pawns to place:\n\tplayer {self._current_player.char}: {self.n_pawns - self.placed_pawns[self._current_player]}"
                 + f"\tplayer {self._other_player.char}: {self.n_pawns - self.placed_pawns[self._other_player]}\n"
             )
+
         return (
             self.grid_str.format(*[' ' if field is None else field.char for field in self.grid])
-            + pawns_to_place + f"Current player: {self._current_player.char}"
+            + pawns_to_place + current_player_text + finished_text
         )
