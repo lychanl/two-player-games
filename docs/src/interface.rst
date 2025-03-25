@@ -15,8 +15,11 @@ Common functionalities of `Game` and `State`:
 * getting current player
 * checking if a game has finished
 
-.. code-block::
-    :caption: Usage example
+=============
+Usage example
+=============
+
+.. code-block:: python
 
     from two_player_games.games.morris import SixMensMorris  # or any other game
     import random
@@ -35,8 +38,11 @@ Common functionalities of `Game` and `State`:
     else:
         print('Winner: Player ' + winner.char)
 
-.. code-block::
-    :caption: Intelligent move selection example
+==================================
+Intelligent move selection example
+==================================
+
+.. code-block:: python
 
     from two_player_games.games.morris import SixMensMorris  # or any other game
     import random

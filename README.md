@@ -38,4 +38,4 @@ else:
 ```
 ## Documentation
 
-Further documentation is avaliable [here](docs/html/index.html)
+Further documentation is avaliable [here](docs/markdown/markdown/index.md)

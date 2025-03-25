@@ -8,5 +8,6 @@ author = 'Jakub Łyskawa'
 
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',
+    'sphinx_markdown_builder',
 ]
