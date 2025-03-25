@@ -1,10 +1,9 @@
 class Player:
     """A class that represents a player in a game"""
     def __init__(self, char: str) -> None:
-        """
-        Initializes a player.
+        """ Initializes a player.
 
-        Parameters:
+        Args:
             char: a single-character string to represent the player in textual representations of game state
         """
         if len(char) != 1:

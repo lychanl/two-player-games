@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Two-player game interface &#8212; Two-player games  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Two-player games" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="two-player-game-interface">
+<h1>Two-player game interface<a class="headerlink" href="#two-player-game-interface" title="Link to this heading">¶</a></h1>
+<p>Two primary base classes of the games are <cite>Game</cite> and <cite>State</cite>.</p>
+<p>These two classes have very similar functionalities, with the following differences:</p>
+<ul class="simple">
+<li><p>a <cite>Game</cite> object contains a <cite>State</cite> object</p></li>
+<li><p>making move on a <cite>Game</cite> object changes its state while making move on a <cite>State</cite> object returns new state without affecting the previous one.</p></li>
+<li><p>a <cite>State</cite> object may have more game-specific functionalities</p></li>
+</ul>
+<p>Common functionalities of <cite>Game</cite> and <cite>State</cite>:</p>
+<ul class="simple">
+<li><p>getting the list of avaliable moves</p></li>
+<li><p>getting current player</p></li>
+<li><p>checking if a game has finished</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Usage example</span><a class="headerlink" href="#id1" title="Link to this code">¶</a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">two_player_games.games.morris</span><span class="w"> </span><span class="kn">import</span> <span class="n">SixMensMorris</span>  <span class="c1"># or any other game</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+
+<span class="n">game</span> <span class="o">=</span> <span class="n">SixMensMorris</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="ow">not</span> <span class="n">game</span><span class="o">.</span><span class="n">is_finished</span><span class="p">():</span>
+    <span class="n">moves</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">get_moves</span><span class="p">()</span>
+    <span class="n">move</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">moves</span><span class="p">)</span>
+    <span class="n">game</span><span class="o">.</span><span class="n">make_move</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+
+<span class="n">winner</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">get_winner</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">winner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Draw!&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Winner: Player &#39;</span> <span class="o">+</span> <span class="n">winner</span><span class="o">.</span><span class="n">char</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Intelligent move selection example</span><a class="headerlink" href="#id2" title="Link to this code">¶</a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">two_player_games.games.morris</span><span class="w"> </span><span class="kn">import</span> <span class="n">SixMensMorris</span>  <span class="c1"># or any other game</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="n">current_player</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="c1"># a game-dependent scoring function from the perspective of the current_player</span>
+    <span class="o">...</span>
+
+<span class="n">game</span> <span class="o">=</span> <span class="n">SixMensMorris</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="ow">not</span> <span class="n">game</span><span class="o">.</span><span class="n">is_finished</span><span class="p">():</span>
+    <span class="n">moves</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">get_moves</span><span class="p">()</span>
+
+    <span class="n">move_scores</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">move</span><span class="p">,</span> <span class="n">score</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">get_current_player</span><span class="p">(),</span> <span class="n">game</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">make_move</span><span class="p">(</span><span class="n">move</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">moves</span>
+    <span class="p">]</span>  <span class="c1"># note that `state.make_move()` does not change the game state</span>
+
+    <span class="n">move</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">move_scores</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ms</span><span class="p">:</span> <span class="n">ms</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">game</span><span class="o">.</span><span class="n">make_move</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+
+<span class="n">winner</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">get_winner</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">winner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Draw!&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Winner: Player &#39;</span> <span class="o">+</span> <span class="n">winner</span><span class="o">.</span><span class="n">char</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="interface-classes">
+<h2>Interface classes<a class="headerlink" href="#interface-classes" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="two_player_games.Game">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">two_player_games.</span></span><span class="sig-name descname"><span class="pre">Game</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#two_player_games.State" title="two_player_games.state.State"><span class="pre">State</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#two_player_games.Game" title="Link to this definition">¶</a></dt>
+<dd><p>Game interface.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.Game.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#two_player_games.Game.__str__" title="Link to this definition">¶</a></dt>
+<dd><p>Returns string representation of the current game’s state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>printable text represenation of the game’s state.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.Game.get_current_player">
+<span class="sig-name descname"><span class="pre">get_current_player</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#two_player_games.Player" title="two_player_games.player.Player"><span class="pre">Player</span></a></span></span><a class="headerlink" href="#two_player_games.Game.get_current_player" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the current player.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the object that represents the current player.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#two_player_games.Player" title="two_player_games.Player">Player</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.Game.get_moves">
+<span class="sig-name descname"><span class="pre">get_moves</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#two_player_games.Move" title="two_player_games.move.Move"><span class="pre">Move</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#two_player_games.Game.get_moves" title="Link to this definition">¶</a></dt>
+<dd><p>Returns possible moves in the current state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>An iterable of game-specific Move objects</dt><dd><p>that are valid for the current player in the current state.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Iterable[<a class="reference internal" href="#two_player_games.Move" title="two_player_games.Move">Move</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.Game.get_players">
+<span class="sig-name descname"><span class="pre">get_players</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#two_player_games.Player" title="two_player_games.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#two_player_games.Game.get_players" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves players. Their order may not be consistent between different states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the players in the game.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Iterable[<a class="reference internal" href="#two_player_games.Player" title="two_player_games.Player">Player</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.Game.get_winner">
+<span class="sig-name descname"><span class="pre">get_winner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#two_player_games.Player" title="two_player_games.player.Player"><span class="pre">Player</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#two_player_games.Game.get_winner" title="Link to this definition">¶</a></dt>
+<dd><p>Checks which player is the winner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Player object that represents the winner or None if not finished or draw.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[<a class="reference internal" href="#two_player_games.Player" title="two_player_games.Player">Player</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.Game.is_finished">
+<span class="sig-name descname"><span class="pre">is_finished</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#two_player_games.Game.is_finished" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if the game is finished.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>if the game is finished.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.Game.make_move">
+<span class="sig-name descname"><span class="pre">make_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">move</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#two_player_games.Move" title="two_player_games.move.Move"><span class="pre">Move</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#two_player_games.Game.make_move" title="Link to this definition">¶</a></dt>
+<dd><p>Makes move and changes the underlying state of the game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>move</strong> (<a class="reference internal" href="#two_player_games.Move" title="two_player_games.Move"><em>Move</em></a>) – the move to make.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="two_player_games.Move">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">two_player_games.</span></span><span class="sig-name descname"><span class="pre">Move</span></span><a class="headerlink" href="#two_player_games.Move" title="Link to this definition">¶</a></dt>
+<dd><p>A base class for classes that represent moves in games.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="two_player_games.Player">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">two_player_games.</span></span><span class="sig-name descname"><span class="pre">Player</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#two_player_games.Player" title="Link to this definition">¶</a></dt>
+<dd><p>A class that represents a player in a game</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.Player.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#two_player_games.Player.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initializes a player.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>char</strong> – a single-character string to represent the player in textual representations of game state</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="two_player_games.State">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">two_player_games.</span></span><span class="sig-name descname"><span class="pre">State</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_player</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_player</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#two_player_games.State" title="Link to this definition">¶</a></dt>
+<dd><p>Immutable game state object.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.State.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#two_player_games.State.__str__" title="Link to this definition">¶</a></dt>
+<dd><p>Returns string representation of the current game’s state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>printable text represenation of the game’s state.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.State.get_current_player">
+<span class="sig-name descname"><span class="pre">get_current_player</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#two_player_games.Player" title="two_player_games.player.Player"><span class="pre">Player</span></a></span></span><a class="headerlink" href="#two_player_games.State.get_current_player" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the current player.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the object that represents the current player.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#two_player_games.Player" title="two_player_games.Player">Player</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.State.get_moves">
+<span class="sig-name descname"><span class="pre">get_moves</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#two_player_games.Move" title="two_player_games.move.Move"><span class="pre">Move</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#two_player_games.State.get_moves" title="Link to this definition">¶</a></dt>
+<dd><p>Returns possible moves in the current state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>An iterable of game-specific Move objects</dt><dd><p>that are valid for the current player in the current state.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Iterable[<a class="reference internal" href="#two_player_games.Move" title="two_player_games.Move">Move</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.State.get_players">
+<span class="sig-name descname"><span class="pre">get_players</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#two_player_games.Player" title="two_player_games.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#two_player_games.State.get_players" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves players. Their order may not be consistent between different states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the players in the game.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Iterable[<a class="reference internal" href="#two_player_games.Player" title="two_player_games.Player">Player</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.State.get_winner">
+<span class="sig-name descname"><span class="pre">get_winner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#two_player_games.Player" title="two_player_games.player.Player"><span class="pre">Player</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#two_player_games.State.get_winner" title="Link to this definition">¶</a></dt>
+<dd><p>Checks which player is the winner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Player object that represents the winner or None if not finished or draw.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[<a class="reference internal" href="#two_player_games.Player" title="two_player_games.Player">Player</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.State.is_finished">
+<span class="sig-name descname"><span class="pre">is_finished</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#two_player_games.State.is_finished" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if the game is finished.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>if the game is finished.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="two_player_games.State.make_move">
+<span class="sig-name descname"><span class="pre">make_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">move</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#two_player_games.Move" title="two_player_games.move.Move"><span class="pre">Move</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#two_player_games.State" title="two_player_games.state.State"><span class="pre">State</span></a></span></span><a class="headerlink" href="#two_player_games.State.make_move" title="Link to this definition">¶</a></dt>
+<dd><p>Makes move without changing this object - returns a new object with given state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>move</strong> (<a class="reference internal" href="#two_player_games.Move" title="two_player_games.Move"><em>Move</em></a>) – the move to make.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>New state after the move</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#two_player_games.State" title="two_player_games.State">State</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Two-player games</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Two-player game interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#interface-classes">Interface classes</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Two-player games</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/interface.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
